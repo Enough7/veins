@@ -28,6 +28,6 @@ simple TracingApp extends BaseWaveApplLayer
 {
     @class(TracingApp);
     string appName = default("App that traces data!");
-    string traceRcvFile = default("sendlog-$seed-");
-    string traceSendFile = default("sendlog-$seed-");
+    string traceRcvFile = default("rcvlog-");
+    string traceSendFile = default("sendlog-");
 }
