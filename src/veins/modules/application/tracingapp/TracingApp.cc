@@ -114,7 +114,7 @@ void TracingApp::finish() {
 void TracingApp::onBSM(BasicSafetyMessage* bsm) {
     //Your application has received a beacon message from another car or RSU
     //code for handling the message goes here
-    traceRcv(std::to_string(bsm->getId()), std::to_string(bsm->getSenderAddress()), "");
+    traceRcv(std::to_string(bsm->getTreeId()), std::to_string(bsm->getSenderAddress()), "");
 }
 
 void TracingApp::onWSM(WaveShortMessage* wsm) {
@@ -139,7 +139,7 @@ void TracingApp::populateWSM(WaveShortMessage* wsm, int rcvId, int serial){
     BaseWaveApplLayer::populateWSM(wsm, rcvId, serial);
     if(BasicSafetyMessage* bsm = dynamic_cast<BasicSafetyMessage*>(wsm)){
         //TODO parse data
-        traceSend(std::to_string(bsm->getId()), "", std::to_string(0), "false");
+        traceSend(std::to_string(bsm->getTreeId()), "", std::to_string(0), "false");
     }
 }
 
