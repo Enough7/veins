@@ -24,6 +24,9 @@
 #include <omnetpp.h>
 #include "veins/modules/application/ieee80211p/BaseWaveApplLayer.h"
 
+#define TRACING_SEPARATOR ','
+#define TRACING_QUOTECHAR '\"'
+
 using namespace omnetpp;
 
 /**

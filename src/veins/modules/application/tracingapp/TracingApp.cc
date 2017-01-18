@@ -39,10 +39,10 @@ const void TracingApp::traceRcv(std::string msgID, std::string senderID, std::st
     out_stream.open(traceRcvFile, std::ios_base::app);
     if(out_stream.is_open())
         out_stream <<
-          "\"" << getMyID() << "\"," <<
-          "\"" << msgID << "\"," <<
-          "\"" << senderID << "\"," <<
-          "\"" << data << "\"" << std::endl;
+          TRACING_QUOTECHAR << simTime() << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
+          TRACING_QUOTECHAR << msgID     << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
+          TRACING_QUOTECHAR << senderID  << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
+          TRACING_QUOTECHAR << data      << TRACING_QUOTECHAR << std::endl;
     else
         DBG_APP << "Warning, tracing stream for sending is closed";
     out_stream.close();
@@ -53,11 +53,11 @@ const void TracingApp::traceSend(std::string msgID, std::string data, std::strin
     out_stream.open(traceSendFile, std::ios_base::app);
     if(out_stream.is_open())
         out_stream <<
-          "\"" << getMyID() << "\"," <<
-          "\"" << msgID << "\"," <<
-          "\"" << data << "\"," <<
-          "\"" << noise << "\"," <<
-          "\"" << attacker << "\"" << std::endl;
+          TRACING_QUOTECHAR << getMyID() << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
+          TRACING_QUOTECHAR << msgID     << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
+          TRACING_QUOTECHAR << data      << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
+          TRACING_QUOTECHAR << noise     << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
+          TRACING_QUOTECHAR << attacker  << TRACING_QUOTECHAR << std::endl;
     else
         DBG_APP << "Warning, tracing stream for sending is closed";
     out_stream.close();
