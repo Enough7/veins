@@ -49,6 +49,7 @@ class TracingApp : public BaseWaveApplLayer {
         virtual void onWSA(WaveServiceAdvertisment* wsa);
 
         virtual void handleSelfMsg(cMessage* msg);
+        virtual void populateWSM(WaveShortMessage* wsm, int rcvId, int serial);
         virtual void handlePositionUpdate(cObject* obj);
 
         virtual const int getMyID() const;
@@ -59,8 +60,8 @@ class TracingApp : public BaseWaveApplLayer {
         virtual const std::string getMetaData() const;
         //create trace output (only created when createTrace is set)
         //virtual const void traceStep(std::string additional) const;
-        virtual const void traceSend(std::string data) const;
-        virtual const void traceRcv(std::string data) const;
+        virtual const void traceSend(std::string msgID, std::string data, std::string noise, std::string attacker) const;
+        virtual const void traceRcv(std::string msgID, std::string senderID, std::string data) const;
     };
 
 #endif

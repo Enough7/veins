@@ -34,21 +34,30 @@ Define_Module(TracingApp);
 //}
 
 
-const void TracingApp::traceRcv(std::string data) const {
+const void TracingApp::traceRcv(std::string msgID, std::string senderID, std::string data) const {
     std::ofstream out_stream;
     out_stream.open(traceRcvFile, std::ios_base::app);
     if(out_stream.is_open())
-        out_stream << data << std::endl; //TODO
+        out_stream <<
+          "\"" << getMyID() << "\"," <<
+          "\"" << msgID << "\"," <<
+          "\"" << senderID << "\"," <<
+          "\"" << data << "\"" << std::endl;
     else
         DBG_APP << "Warning, tracing stream for sending is closed";
     out_stream.close();
 }
 
-const void TracingApp::traceSend(std::string data) const {
+const void TracingApp::traceSend(std::string msgID, std::string data, std::string noise, std::string attacker) const {
     std::ofstream out_stream;
     out_stream.open(traceSendFile, std::ios_base::app);
     if(out_stream.is_open())
-        out_stream << data << std::endl; //TODO
+        out_stream <<
+          "\"" << getMyID() << "\"," <<
+          "\"" << msgID << "\"," <<
+          "\"" << data << "\"," <<
+          "\"" << noise << "\"," <<
+          "\"" << attacker << "\"" << std::endl;
     else
         DBG_APP << "Warning, tracing stream for sending is closed";
     out_stream.close();
@@ -105,7 +114,7 @@ void TracingApp::finish() {
 void TracingApp::onBSM(BasicSafetyMessage* bsm) {
     //Your application has received a beacon message from another car or RSU
     //code for handling the message goes here
-    traceRcv("");
+    traceRcv(std::to_string(bsm->getId()), std::to_string(bsm->getSenderAddress()), "");
 }
 
 void TracingApp::onWSM(WaveShortMessage* wsm) {
@@ -124,8 +133,14 @@ void TracingApp::handleSelfMsg(cMessage* msg) {
     BaseWaveApplLayer::handleSelfMsg(msg);
     //this method is for self messages (mostly timers)
     //it is important to call the BaseWaveApplLayer function for BSM and WSM transmission
-    //TODO: use the local variable bsm, which gets data set by BWAL::handleSelfMsg()
-    traceSend("");
+}
+
+void TracingApp::populateWSM(WaveShortMessage* wsm, int rcvId, int serial){
+    BaseWaveApplLayer::populateWSM(wsm, rcvId, serial);
+    if(BasicSafetyMessage* bsm = dynamic_cast<BasicSafetyMessage*>(wsm)){
+        //TODO parse data
+        traceSend(std::to_string(bsm->getId()), "", std::to_string(0), "false");
+    }
 }
 
 void TracingApp::handlePositionUpdate(cObject* obj) {
