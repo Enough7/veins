@@ -54,15 +54,15 @@ VeinsInetMobility::VeinsInetMobility() :
 void VeinsInetMobility::preInitialize(std::string external_id, const inet::Coord& position, std::string road_id, double speed, double angle) {
 	Enter_Method_Silent();
 	lastPosition = position;
-	lastSpeed = Coord(cos(angle), -sin(angle));
-	lastOrientation.alpha = -angle;
+	lastSpeed = Coord(cos(angle), -sin(angle));  // FIXME: no idea if this uses the correct reference system
+	lastOrientation.alpha = angle;  // FIXME: no idea if this uses the correct reference system
 }
 
 void VeinsInetMobility::nextPosition(const inet::Coord& position, std::string road_id, double speed, double angle) {
 	Enter_Method_Silent();
 	lastPosition = position;
-	lastSpeed = Coord(cos(angle), -sin(angle));
-	lastOrientation.alpha = -angle;
+	lastSpeed = Coord(cos(angle), -sin(angle));  // FIXME: no idea if this uses the correct reference system
+	lastOrientation.alpha = angle;  // FIXME: no idea if this uses the correct reference system
 	emitMobilityStateChangedSignal();
 	updateVisualRepresentation();
 }
