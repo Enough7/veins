@@ -42,6 +42,7 @@ class TracingApp : public BaseWaveApplLayer {
     private:
         std::string traceRcvFile;
         std::string traceSendFile;
+        std::string traceGPSFile;
 
     public:
         virtual void initialize(int stage);
@@ -65,6 +66,7 @@ class TracingApp : public BaseWaveApplLayer {
         //virtual const void traceStep(std::string additional) const;
         virtual const void traceSend(std::string msgID, std::string data, std::string noise, std::string attacker) const;
         virtual const void traceRcv(std::string msgID, std::string senderID, std::string data) const;
+        virtual const void traceGPS(std::string noise) const;
     };
 
 #endif

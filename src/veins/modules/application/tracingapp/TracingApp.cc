@@ -22,16 +22,19 @@
 
 Define_Module(TracingApp);
 
-//const void TracingApp::traceStep(std::string additional) const {
-//    std::ofstream tracefile;
-//    tracefile.open(traceFile, std::ios_base::app);
-//    if(tracefile.is_open()){
-//        tracefile << getMyID() << ";" <<  getMyPosition() << ";" << simTime() << ";"  << additional << ";" << getMetaData() << std::endl;
-//    }else{
-//        std::cout << getMyID() << ";" <<  getMyPosition() << ";" << simTime() << ";"  << additional << ";" << getMetaData() << std::endl;
-//    }
-//    tracefile.close();
-//}
+const void TracingApp::traceGPS(std::string noise) const {
+    std::ofstream out_stream;
+    out_stream.open(traceGPSFile, std::ios_base::app);
+    if(out_stream.is_open())
+        out_stream <<
+          TRACING_QUOTECHAR << simTime()       << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
+          TRACING_QUOTECHAR << getMyPosition() << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
+          TRACING_QUOTECHAR << data            << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
+          TRACING_QUOTECHAR << noise           << TRACING_QUOTECHAR << std::endl;
+    else
+        DBG_APP << "Warning, tracing stream for GPS trace is closed";
+    out_stream.close();
+}
 
 
 const void TracingApp::traceRcv(std::string msgID, std::string senderID, std::string data) const {
@@ -44,7 +47,7 @@ const void TracingApp::traceRcv(std::string msgID, std::string senderID, std::st
           TRACING_QUOTECHAR << senderID  << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
           TRACING_QUOTECHAR << data      << TRACING_QUOTECHAR << std::endl;
     else
-        DBG_APP << "Warning, tracing stream for sending is closed";
+        DBG_APP << "Warning, tracing stream for reception is closed";
     out_stream.close();
 }
 
@@ -92,6 +95,9 @@ void TracingApp::initialize(int stage) {
         EV << "Initializing " << par("appName").stringValue() << std::endl;
         std::ostringstream out_rcv; out_rcv << par("traceRcvFile").stdstringValue() << getMyID() << ".csv";
         traceRcvFile = out_rcv.str();
+
+        std::ostringstream out_rcv; out_rcv << par("traceGPSFile").stdstringValue() << getMyID() << ".csv";
+        traceGPSFile = out_rcv.str();
 
         //open immediately, because this file is separate for every vehicle
         //traceRcvStream.open(out_rcv.str(), std::ios_base::app);
