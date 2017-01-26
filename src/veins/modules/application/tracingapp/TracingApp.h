@@ -60,10 +60,7 @@ class TracingApp : public BaseWaveApplLayer {
         virtual const Coord getMyPosition() const;
         virtual const double getMySpeed() const;
         virtual const double getAngle() const;
-        //getMetaData is meta-data included with every output
-        virtual const std::string getMetaData() const;
-        //create trace output (only created when createTrace is set)
-        //virtual const void traceStep(std::string additional) const;
+
         virtual const void traceSend(std::string msgID, std::string data, std::string noise, std::string attacker) const;
         virtual const void traceRcv(std::string msgID, std::string senderID, std::string data) const;
         virtual const void traceGPS(std::string noise) const;

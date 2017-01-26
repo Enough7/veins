@@ -36,7 +36,6 @@ const void TracingApp::traceGPS(std::string noise) const {
     out_stream.close();
 }
 
-
 const void TracingApp::traceRcv(std::string msgID, std::string senderID, std::string data) const {
     std::ofstream out_stream;
     out_stream.open(traceRcvFile, std::ios_base::app);
@@ -81,12 +80,6 @@ const double TracingApp::getMySpeed() const {
 const double TracingApp::getAngle() const {
     return mobility->getAngleRad();
 }
-
-const std::string TracingApp::getMetaData() const {
-    return "";
-}
-
-
 
 void TracingApp::initialize(int stage) {
     BaseWaveApplLayer::initialize(stage);
