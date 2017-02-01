@@ -29,7 +29,6 @@ const void TracingApp::traceGPS(std::string noise) const {
         out_stream <<
           TRACING_QUOTECHAR << simTime()       << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
           TRACING_QUOTECHAR << getMyPosition() << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
-          TRACING_QUOTECHAR << data            << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
           TRACING_QUOTECHAR << noise           << TRACING_QUOTECHAR << std::endl;
     else
         DBG_APP << "Warning, tracing stream for GPS trace is closed";
@@ -89,8 +88,8 @@ void TracingApp::initialize(int stage) {
         std::ostringstream out_rcv; out_rcv << par("traceRcvFile").stdstringValue() << getMyID() << ".csv";
         traceRcvFile = out_rcv.str();
 
-        std::ostringstream out_rcv; out_rcv << par("traceGPSFile").stdstringValue() << getMyID() << ".csv";
-        traceGPSFile = out_rcv.str();
+        std::ostringstream out_gps; out_gps << par("traceGPSFile").stdstringValue() << getMyID() << ".csv";
+        traceGPSFile = out_gps.str();
 
         //open immediately, because this file is separate for every vehicle
         //traceRcvStream.open(out_rcv.str(), std::ios_base::app);
@@ -150,4 +149,5 @@ void TracingApp::handlePositionUpdate(cObject* obj) {
     //the vehicle has moved. Code that reacts to new positions goes here.
     //member variables such as currentPosition and currentSpeed are updated in the parent class
 
+    traceGPS("");
 }
