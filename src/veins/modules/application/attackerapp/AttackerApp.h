@@ -13,6 +13,10 @@
 #include "veins/modules/application/tracingapp/TracingApp.h"
 #include "veins/modules/application/ieee80211p/BaseWaveApplLayer.h"
 
+#define ATTACKER_TYPE_CONST_POSITION 0
+
+using namespace omnetpp;
+
 class AttackerApp : public TracingApp
 {
     private:
@@ -23,6 +27,7 @@ class AttackerApp : public TracingApp
     protected:
         virtual void handleSelfMsg(cMessage* msg);
         virtual void populateWSM(WaveShortMessage* wsm, int rcvId=0, int serial=0);
+        virtual void attackBSM(BasicSafetyMessage* bsm);
         virtual void attackSetConstPosition(BasicSafetyMessage* bsm);
 };
 

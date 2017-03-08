@@ -31,10 +31,9 @@ void AttackerApp::handleSelfMsg(cMessage* msg) {
             BasicSafetyMessage* bsm = new BasicSafetyMessage();
             populateWSM(bsm);
 
-            //TODO: implement attacker
             // attacker
             if (attacker) {
-                attackSetConstPosition(bsm);
+                attackBSM(bsm);
             }
 
             sendDown(bsm);
@@ -66,6 +65,20 @@ void AttackerApp::populateWSM(WaveShortMessage* wsm, int rcvId, int serial) {
         Coord pos = bsm->getSenderPos();
         std::stringstream tmp; tmp << pos.x << ", " << pos.y << ", " << pos.z;
         traceSend(std::to_string(bsm->getTreeId()), tmp.str(), std::to_string(0), attacker ? "true" : "false");
+    }
+}
+
+//TODO: implement more attacker
+void AttackerApp::attackBSM(BasicSafetyMessage* bsm) {
+    int attackerType = par("attackerType").longValue();
+
+    switch(attackerType)
+    {
+    case ATTACKER_TYPE_CONST_POSITION:
+        attackSetConstPosition(bsm);
+        break;
+    default:
+        DBG_APP << "Unknown attacker type! Type: " << attackerType << endl;
     }
 }
 

@@ -29,8 +29,14 @@ simple AttackerApp extends TracingApp
     @class(AttackerApp);
     double attackerProbability = default(0);    // probability that a node is an attacker
                                                 // attackerProbability < 0: 1 attacker
+                                                
     int attackerMaxCount = default(-1);         // it's aimed to reach attackerMaxCount, but the effective number of attackers can be higher or lower
                                                 // attackerMaxCount < 0: no attacker limit
-    double attackerXPos = default(0);           // x coordinate of attacker (for BSMs)
-    double attackerYPos = default(0);           // y coordinate of attacker (for BSMs)
+                                                
+    int attackerType = default(0);				// specifies the attacker type
+                                                // 0: sets the position in BSMs to a const value (can be specified in the parameters attackerXPos and attackerYPos)
+                                                
+    double attackerXPos = default(0);           // x coordinate of the attacker (in BSMs)
+    double attackerYPos = default(0);           // y coordinate of the attacker (in BSMs)
+
 }
