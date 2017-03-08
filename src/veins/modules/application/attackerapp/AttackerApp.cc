@@ -8,6 +8,8 @@ void AttackerApp::initialize(int stage) {
         // initialize
         EV << "Initializing attacker" << std::endl;
         attacker = false;
+        attackerPosRangeMin = par("attackerPosRangeMin").doubleValue();
+        attackerPosRangeMax = par("attackerPosRangeMax").doubleValue();
 
         long attackerMaxCount = par("attackerMaxCount").longValue();
         if((attackerMaxCount < 0) || (attackerCount < attackerMaxCount)) {
@@ -80,23 +82,55 @@ void AttackerApp::attackBSM(BasicSafetyMessage* bsm) {
     case ATTACKER_TYPE_DYNAMIC_POSITION:
         attackSetDynamicPosition(bsm);
         break;
+    case ATTACKER_TYPE_RANDOM_POSITION:
+        attackSetRandomPosition(bsm);
+        break;
+    case ATTACKER_TYPE_RANDOM_DYNAMIC_POSITION:
+        attackSetRandomDynamicPosition(bsm);
+        break;
     default:
         DBG_APP << "Unknown attacker type! Type: " << attackerType << endl;
     }
 }
 
 void AttackerApp::attackSetConstPosition(BasicSafetyMessage* bsm) {
-    double xPos = par("attackerXPos").doubleValue();
-    double yPos = par("attackerYPos").doubleValue();
+    attackSetConstPosition(bsm, par("attackerXPos").doubleValue(), par("attackerYPos").doubleValue());
+}
 
+void AttackerApp::attackSetConstPosition(BasicSafetyMessage* bsm, double xPos, double yPos) {
     DBG_APP << "Attack: SetConstPosition (x=" << xPos << ", y=" << yPos << ")" << std::endl;
     bsm->setSenderPos(Coord(xPos, yPos, (bsm->getSenderPos()).z));
 }
 
 void AttackerApp::attackSetDynamicPosition(BasicSafetyMessage* bsm) {
-    double newXPos = par("attackerXPos").doubleValue() + (bsm->getSenderPos()).x;
-    double newYPos = par("attackerYPos").doubleValue() + (bsm->getSenderPos()).y;
+    attackSetDynamicPosition(bsm, par("attackerXPos").doubleValue(), par("attackerYPos").doubleValue());
+}
+
+void AttackerApp::attackSetDynamicPosition(BasicSafetyMessage* bsm, double xPos, double yPos) {
+    double newXPos = (bsm->getSenderPos()).x + xPos;
+    double newYPos = (bsm->getSenderPos()).y + yPos;
 
     DBG_APP << "Attack: SetDynamicPosition (x=" << newXPos << ", y=" << newYPos << ")" << std::endl;
     bsm->setSenderPos(Coord(newXPos, newYPos, (bsm->getSenderPos()).z));
+}
+
+void AttackerApp::attackSetRandomPosition(BasicSafetyMessage* bsm){
+    Coord randomPosition = getRandomPosition();
+    attackSetConstPosition(bsm, randomPosition.x, randomPosition.y);
+}
+
+void AttackerApp::attackSetRandomDynamicPosition(BasicSafetyMessage* bsm) {
+    Coord randomPositionInRange = getRandomPositionInRange();
+    attackSetDynamicPosition(bsm, randomPositionInRange.x, randomPositionInRange.y);
+}
+
+Coord AttackerApp::getRandomPosition() {
+    if(world == NULL) {
+        world = FindModule<BaseWorldUtility*>::findGlobalModule();
+    }
+    return world->getRandomPosition();
+}
+
+Coord AttackerApp::getRandomPositionInRange() {
+    return Coord(uniform(attackerPosRangeMin, attackerPosRangeMax), uniform(attackerPosRangeMin, attackerPosRangeMax));
 }

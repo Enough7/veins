@@ -36,8 +36,12 @@ simple AttackerApp extends TracingApp
     int attackerType = default(0);				// specifies the attacker type
                                                 // 0: sets the position in BSMs to a const value (can be specified in the parameters attackerXPos and attackerYPos)
                                                 // 1: sets the position in BSMs to a dynamic value (newXPos = xPos + attackerXPos, newYPos = yPos + attackerYPos)
+                                                // 2: calls 0 with a random position (on the playground)
+                                                // 3: calls 1 with a random position (minOffset = attackerPosRangeMin, maxOffset = attackerPosRangeMax)
                                                 
     double attackerXPos = default(0);           // x coordinate of the attacker (in BSMs)
     double attackerYPos = default(0);           // y coordinate of the attacker (in BSMs)
+    double attackerPosRangeMin = default(-300); // min value for attackType 3
+    double attackerPosRangeMax = default(300);  // max value for attackType 3
 
 }
