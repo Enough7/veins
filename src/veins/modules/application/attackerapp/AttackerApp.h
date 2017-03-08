@@ -14,6 +14,7 @@
 #include "veins/modules/application/ieee80211p/BaseWaveApplLayer.h"
 
 #define ATTACKER_TYPE_CONST_POSITION 0
+#define ATTACKER_TYPE_DYNAMIC_POSITION 1
 
 using namespace omnetpp;
 
@@ -29,6 +30,7 @@ class AttackerApp : public TracingApp
         virtual void populateWSM(WaveShortMessage* wsm, int rcvId=0, int serial=0);
         virtual void attackBSM(BasicSafetyMessage* bsm);
         virtual void attackSetConstPosition(BasicSafetyMessage* bsm);
+        virtual void attackSetDynamicPosition(BasicSafetyMessage* bsm);
 };
 
 long AttackerApp::attackerCount = 0;

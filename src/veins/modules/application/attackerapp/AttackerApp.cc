@@ -77,6 +77,9 @@ void AttackerApp::attackBSM(BasicSafetyMessage* bsm) {
     case ATTACKER_TYPE_CONST_POSITION:
         attackSetConstPosition(bsm);
         break;
+    case ATTACKER_TYPE_DYNAMIC_POSITION:
+        attackSetDynamicPosition(bsm);
+        break;
     default:
         DBG_APP << "Unknown attacker type! Type: " << attackerType << endl;
     }
@@ -88,4 +91,12 @@ void AttackerApp::attackSetConstPosition(BasicSafetyMessage* bsm) {
 
     DBG_APP << "Attack: SetConstPosition (x=" << xPos << ", y=" << yPos << ")" << std::endl;
     bsm->setSenderPos(Coord(xPos, yPos, (bsm->getSenderPos()).z));
+}
+
+void AttackerApp::attackSetDynamicPosition(BasicSafetyMessage* bsm) {
+    double newXPos = par("attackerXPos").doubleValue() + (bsm->getSenderPos()).x;
+    double newYPos = par("attackerYPos").doubleValue() + (bsm->getSenderPos()).y;
+
+    DBG_APP << "Attack: SetDynamicPosition (x=" << newXPos << ", y=" << newYPos << ")" << std::endl;
+    bsm->setSenderPos(Coord(newXPos, newYPos, (bsm->getSenderPos()).z));
 }
