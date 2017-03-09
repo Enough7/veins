@@ -33,15 +33,18 @@ simple AttackerApp extends TracingApp
     int attackerMaxCount = default(-1);         // it's aimed to reach attackerMaxCount, but the effective number of attackers can be higher or lower
                                                 // attackerMaxCount < 0: no attacker limit
                                                 
-    int attackerType = default(0);				// specifies the attacker type
-                                                // 0: sets the position in BSMs to a const value (can be specified in the parameters attackerXPos and attackerYPos)
-                                                // 1: sets the position in BSMs to a dynamic value (newXPos = xPos + attackerXPos, newYPos = yPos + attackerYPos)
-                                                // 2: calls 0 with a random position (on the playground)
-                                                // 3: calls 1 with a random position (minOffset = attackerPosRangeMin, maxOffset = attackerPosRangeMax)
+    int attackerType = default(1);				// specifies the attacker type
+                                                //
+                                                // to select multiple attacker types, use the sum of the requested attacker types
+                                                // example: to select the attacker types 1 and 2, you need to set attackerType to 3 (= 1 + 2)
+                                                //
+                                                // 1: sets the position in BSMs to a const value (can be specified in the parameters attackerXPos and attackerYPos)
+                                                // 2: sets the position in BSMs to a dynamic value (newXPos = xPos + attackerXPos, newYPos = yPos + attackerYPos)
+                                                // 4: calls 1 with a random position (on the playground)
+                                                // 8: calls 2 with a random position (minOffset = attackerPosRangeMin, maxOffset = attackerPosRangeMax)
                                                 
     double attackerXPos = default(0);           // x coordinate of the attacker (in BSMs)
     double attackerYPos = default(0);           // y coordinate of the attacker (in BSMs)
-    double attackerPosRangeMin = default(-300); // min value for attackType 3
-    double attackerPosRangeMax = default(300);  // max value for attackType 3
-
+    double attackerPosRangeMin = default(-300); // min value for attackType 8
+    double attackerPosRangeMax = default(300);  // max value for attackType 8
 }

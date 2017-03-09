@@ -8,18 +8,21 @@ void AttackerApp::initialize(int stage) {
         // initialize
         EV << "Initializing attacker" << std::endl;
         attacker = false;
+        attackerType = ATTACKER_TYPE_NO_ATTACKER;
+
         attackerPosRangeMin = par("attackerPosRangeMin").doubleValue();
         attackerPosRangeMax = par("attackerPosRangeMax").doubleValue();
 
         long attackerMaxCount = par("attackerMaxCount").longValue();
-        if((attackerMaxCount < 0) || (attackerCount < attackerMaxCount)) {
+        if((attackerMaxCount < 0) || (currentAttackerCount < attackerMaxCount)) {
             // code is based on src/veins/modules/application/ldm/LDMApp.cc from branch alaa-al-momani-thesis
             double attackerProbability = par("attackerProbability").doubleValue();
-            if((attackerProbability < 0 && attackerCount == 0) // < 0 means *exactly one* attacker.
+            if((attackerProbability < 0 && currentAttackerCount == 0) // < 0 means *exactly one* attacker.
                     || (attackerProbability > 0)) {
                 attacker = (dblrand() <= std::abs(attackerProbability));
                 if(attacker) {
-                    attackerCount++;
+                    attackerType = getRandomAttackerType();
+                    currentAttackerCount++;
                 }
             }
         }
@@ -66,14 +69,12 @@ void AttackerApp::populateWSM(WaveShortMessage* wsm, int rcvId, int serial) {
     if (BasicSafetyMessage* bsm = dynamic_cast<BasicSafetyMessage*>(wsm)) {
         Coord pos = bsm->getSenderPos();
         std::stringstream tmp; tmp << pos.x << ", " << pos.y << ", " << pos.z;
-        traceSend(std::to_string(bsm->getTreeId()), tmp.str(), std::to_string(0), attacker ? "true" : "false");
+        traceSend(std::to_string(bsm->getTreeId()), tmp.str(), std::to_string(0), std::to_string(attackerType));
     }
 }
 
 //TODO: implement more attacker
 void AttackerApp::attackBSM(BasicSafetyMessage* bsm) {
-    int attackerType = par("attackerType").longValue();
-
     switch(attackerType)
     {
     case ATTACKER_TYPE_CONST_POSITION:
@@ -133,4 +134,39 @@ Coord AttackerApp::getRandomPosition() {
 
 Coord AttackerApp::getRandomPositionInRange() {
     return Coord(uniform(attackerPosRangeMin, attackerPosRangeMax), uniform(attackerPosRangeMin, attackerPosRangeMax));
+}
+
+int AttackerApp::getRandomAttackerType() {
+    long attackerTypes = par("attackerType").longValue();
+
+    // calculate attacker types count
+    if(attackerTypesCount < 0) {
+        std::size_t longSize = sizeof(long);
+        attackerTypesCount = 0;
+        for(int i = 0; i < longSize; i++) {
+            if(attackerTypes & (1<<i)) {
+                attackerTypesCount++;
+            }
+        }
+    }
+
+    // get random attacker type
+    int randomAttackerType = ATTACKER_TYPE_NO_ATTACKER;
+    double attackerTypeProbability = (double)(1.0 / attackerTypesCount);
+    double randomNumber = dblrand();
+    for(int i = 1; i <= attackerTypesCount; i++) {
+        if(randomNumber <= (i * attackerTypeProbability)) {
+            int pos = -1;
+            int attackTypeNum = 0;
+            while(attackTypeNum < i) {
+                pos++;
+                if(attackerTypes & (1<<pos)) {
+                    attackTypeNum++;
+                }
+            }
+            randomAttackerType = 1<<pos;
+            break;
+         }
+     }
+    return randomAttackerType;
 }

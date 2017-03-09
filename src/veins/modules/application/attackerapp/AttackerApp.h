@@ -10,26 +10,31 @@
 #define __VEINS_ATTACKERAPP_H_
 
 #include <omnetpp.h>
+#include <string>
 #include "veins/modules/application/tracingapp/TracingApp.h"
 #include "veins/modules/application/ieee80211p/BaseWaveApplLayer.h"
 #include "veins/base/utils/FindModule.h"
 #include "veins/base/modules/BaseWorldUtility.h"
 
-#define ATTACKER_TYPE_CONST_POSITION 0
-#define ATTACKER_TYPE_DYNAMIC_POSITION 1
-#define ATTACKER_TYPE_RANDOM_POSITION 2
-#define ATTACKER_TYPE_RANDOM_DYNAMIC_POSITION 3
+#define ATTACKER_TYPE_NO_ATTACKER 0
+#define ATTACKER_TYPE_CONST_POSITION 1
+#define ATTACKER_TYPE_DYNAMIC_POSITION 2
+#define ATTACKER_TYPE_RANDOM_POSITION 4
+#define ATTACKER_TYPE_RANDOM_DYNAMIC_POSITION 8
 
 using namespace omnetpp;
 
 class AttackerApp : public TracingApp
 {
     private:
-        bool attacker;
-        static long attackerCount;
+        static int attackerTypesCount;
+        static long currentAttackerCount;
         static BaseWorldUtility *world;
+        bool attacker;
         double attackerPosRangeMin;
         double attackerPosRangeMax;
+        int attackerType;
+
     public:
         virtual void initialize(int stage);
     protected:
@@ -44,9 +49,11 @@ class AttackerApp : public TracingApp
         virtual void attackSetRandomDynamicPosition(BasicSafetyMessage* bsm);
         virtual Coord getRandomPosition();
         virtual Coord getRandomPositionInRange();
+        virtual int getRandomAttackerType();
 };
 
-long AttackerApp::attackerCount = 0;
+int AttackerApp::attackerTypesCount = -1;
+long AttackerApp::currentAttackerCount = 0;
 BaseWorldUtility* AttackerApp::world = NULL;
 
 #endif
