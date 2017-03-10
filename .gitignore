@@ -36,3 +36,16 @@ subprojects/veins_inet/examples/**/.cmdenv-log
 subprojects/veins_inet/examples/**/valgrind.out
 
 .*.swp
+
+simulations/lust/results
+simulations/lust/.tkenvrc
+simulations/lust/.cmdenv-log
+simulations/lust/valgrind.out
+simulations/lust/dua.static.log
+simulations/lust/dua.static.summary.xml
+simulations/lust/dua.static.tripinfo.xml
+simulations/lust/e1_OffRamp_output.xml
+simulations/lust/e1_OnRamp_output.xml
+simulations/lust/e1_begin_output.xml
+simulations/lust/e1_end_output.xml
+simulations/lust/e1_link_output.xml
