@@ -28,6 +28,7 @@ class AttackerApp : public TracingApp
 {
     private:
         static int attackerTypesCount;
+        static std::vector<double> attackerTypeProbability;
         static long currentAttackerCount;
         static BaseWorldUtility *world;
         bool attacker;
@@ -53,6 +54,7 @@ class AttackerApp : public TracingApp
 };
 
 int AttackerApp::attackerTypesCount = -1;
+std::vector<double> AttackerApp::attackerTypeProbability;
 long AttackerApp::currentAttackerCount = 0;
 BaseWorldUtility* AttackerApp::world = NULL;
 

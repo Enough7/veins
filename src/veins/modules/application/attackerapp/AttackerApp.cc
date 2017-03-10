@@ -148,17 +148,35 @@ int AttackerApp::getRandomAttackerType() {
                 attackerTypesCount++;
             }
         }
+        // get attacker type probability
+        // code is based on https://omnetpp.org/pmwiki/index.php?n=Main.NEDParameterVectors
+        const char *aTProbability = par("attackerTypeProbability");
+        double currentProbability;
+        double probability = 0.0;
+        cStringTokenizer tokenizer(aTProbability);
+        while (tokenizer.hasMoreTokens()) {
+            currentProbability = std::stod(tokenizer.nextToken());
+            attackerTypeProbability.push_back(currentProbability);
+            probability += currentProbability;
+        }
+        if(attackerTypeProbability.size() < attackerTypesCount) {
+            currentProbability = (1.0 - probability) * (double)(1.0 / (attackerTypesCount - attackerTypeProbability.size()));
+            while(attackerTypeProbability.size() < attackerTypesCount) {
+                attackerTypeProbability.push_back(currentProbability);
+            }
+        }
     }
 
     // get random attacker type
     int randomAttackerType = ATTACKER_TYPE_NO_ATTACKER;
-    double attackerTypeProbability = (double)(1.0 / attackerTypesCount);
+    double currentProbability = 0.0;
     double randomNumber = dblrand();
-    for(int i = 1; i <= attackerTypesCount; i++) {
-        if(randomNumber <= (i * attackerTypeProbability)) {
+    for(int i = 0; i < attackerTypesCount; i++) {
+        currentProbability += attackerTypeProbability.at(i);
+        if(randomNumber <= currentProbability) {
             int pos = -1;
             int attackTypeNum = 0;
-            while(attackTypeNum < i) {
+            while(attackTypeNum <= i) {
                 pos++;
                 if(attackerTypes & (1<<pos)) {
                     attackTypeNum++;
