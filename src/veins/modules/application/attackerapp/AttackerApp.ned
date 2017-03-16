@@ -39,7 +39,7 @@ simple AttackerApp extends TracingApp
                                                   // example: to select the attacker types 1 and 2, you need to set attackerType to 3 (= 1 + 2)
                                                   //
                                                   // 1: sets the position in BSMs to a const value (can be specified in the parameters attackerXPos and attackerYPos)
-                                                  // 2: sets the position in BSMs to a dynamic value (newXPos = xPos + attackerXPos, newYPos = yPos + attackerYPos)
+                                                  // 2: sets the position in BSMs to a dynamic value (newXPos = xPos + attackerXOffset, newYPos = yPos + attackerYOffset)
                                                   // 4: calls 1 with a random position (on the playground)
                                                   // 8: calls 2 with a random position (minOffset = attackerPosRangeMin, maxOffset = attackerPosRangeMax)
                                                 
@@ -47,8 +47,10 @@ simple AttackerApp extends TracingApp
                                                   // example: to set the probability for the first selected attacker type to 0.3 and for the second selected attacker type to 0.7,
                                                   // you need to set attackerTypeProbability to "0.3 0.7" (or just "0.3")
                                                   
-    double attackerXPos = default(0);             // x coordinate of the attacker (in BSMs)
-    double attackerYPos = default(0);             // y coordinate of the attacker (in BSMs)
-    double attackerPosRangeMin = default(-300);   // min value for attackType 8
-    double attackerPosRangeMax = default(300);    // max value for attackType 8
+    double attackerXPos = default(0);             // x coordinate of the attacker (in BSMs) (attacker type 1)
+    double attackerYPos = default(0);             // y coordinate of the attacker (in BSMs) (attacker type 1)
+    double attackerXOffset = default(150);        // x offset for attacker type 2
+    double attackerYOffset = default(150);        // y offset for attacker type 2
+    double attackerPosRangeMin = default(-300);   // min value for attacker type 8
+    double attackerPosRangeMax = default(300);    // max value for attacker type 8
 }

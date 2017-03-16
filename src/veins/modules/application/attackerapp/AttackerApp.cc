@@ -104,7 +104,7 @@ void AttackerApp::attackSetConstPosition(BasicSafetyMessage* bsm, double xPos, d
 }
 
 void AttackerApp::attackSetDynamicPosition(BasicSafetyMessage* bsm) {
-    attackSetDynamicPosition(bsm, par("attackerXPos").doubleValue(), par("attackerYPos").doubleValue());
+    attackSetDynamicPosition(bsm, par("attackerXOffset").doubleValue(), par("attackerYOffset").doubleValue());
 }
 
 void AttackerApp::attackSetDynamicPosition(BasicSafetyMessage* bsm, double xPos, double yPos) {
