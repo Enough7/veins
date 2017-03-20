@@ -64,6 +64,22 @@ const void TracingApp::traceSend(std::string msgID, std::string data, std::strin
     out_stream.close();
 }
 
+const void TracingApp::traceSend(std::string msgID, std::string senderID, std::string data, std::string noise, std::string attacker) const {
+    std::ofstream out_stream;
+    out_stream.open(traceSendFile, std::ios_base::app);
+    if(out_stream.is_open())
+        out_stream <<
+          TRACING_QUOTECHAR << getMyID() << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
+          TRACING_QUOTECHAR << senderID  << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
+          TRACING_QUOTECHAR << msgID     << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
+          TRACING_QUOTECHAR << data      << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
+          TRACING_QUOTECHAR << noise     << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
+          TRACING_QUOTECHAR << attacker  << TRACING_QUOTECHAR << std::endl;
+    else
+        DBG_APP << "Warning, tracing stream for sending is closed";
+    out_stream.close();
+}
+
 const int TracingApp::getMyID() const {
     return getParentModule()->getIndex(); //Car.ned's index.
 }

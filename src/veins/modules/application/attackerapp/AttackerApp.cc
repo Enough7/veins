@@ -69,7 +69,7 @@ void AttackerApp::populateWSM(WaveShortMessage* wsm, int rcvId, int serial) {
     if (BasicSafetyMessage* bsm = dynamic_cast<BasicSafetyMessage*>(wsm)) {
         Coord pos = bsm->getSenderPos();
         std::stringstream tmp; tmp << pos.x << ", " << pos.y << ", " << pos.z;
-        traceSend(std::to_string(bsm->getTreeId()), tmp.str(), std::to_string(0), std::to_string(attackerType));
+        traceSend(std::to_string(bsm->getTreeId()), std::to_string(bsm->getSenderAddress()), tmp.str(), std::to_string(0), std::to_string(attackerType));
     }
 }
 
