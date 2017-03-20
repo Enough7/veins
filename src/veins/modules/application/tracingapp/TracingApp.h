@@ -62,6 +62,7 @@ class TracingApp : public BaseWaveApplLayer {
         virtual const double getAngle() const;
 
         virtual const void traceSend(std::string msgID, std::string data, std::string noise, std::string attacker) const;
+        virtual const void traceSend(std::string msgID, std::string senderID, std::string data, std::string noise, std::string attacker) const;
         virtual const void traceRcv(std::string msgID, std::string senderID, std::string data) const;
         virtual const void traceGPS(std::string data, std::string noise) const;
     };
