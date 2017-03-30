@@ -35,6 +35,8 @@ class AttackerApp : public TracingApp
         double attackerPosRangeMin;
         double attackerPosRangeMax;
         int attackerType;
+        std::string traceJSONFile;
+        std::string traceGroundTruthJSONFile;
 
     public:
         virtual void initialize(int stage);
