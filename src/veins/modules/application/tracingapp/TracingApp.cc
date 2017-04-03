@@ -19,64 +19,20 @@
 //
 
 #include "TracingApp.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
+
+using namespace rapidjson;
 
 Define_Module(TracingApp);
 
-const void TracingApp::traceGPS(std::string data, std::string noise) const {
+const void TracingApp::traceJSON(std::string file, std::string JSONObject) const {
     std::ofstream out_stream;
-    out_stream.open(traceGPSFile, std::ios_base::app);
+    out_stream.open(file, std::ios_base::app);
     if(out_stream.is_open())
-        out_stream <<
-          TRACING_QUOTECHAR << simTime()       << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
-          TRACING_QUOTECHAR << data            << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
-          TRACING_QUOTECHAR << noise           << TRACING_QUOTECHAR << std::endl;
+        out_stream << JSONObject << std::endl;
     else
-        DBG_APP << "Warning, tracing stream for GPS trace is closed";
-    out_stream.close();
-}
-
-const void TracingApp::traceRcv(std::string msgID, std::string senderID, std::string data) const {
-    std::ofstream out_stream;
-    out_stream.open(traceRcvFile, std::ios_base::app);
-    if(out_stream.is_open())
-        out_stream <<
-          TRACING_QUOTECHAR << simTime() << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
-          TRACING_QUOTECHAR << msgID     << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
-          TRACING_QUOTECHAR << senderID  << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
-          TRACING_QUOTECHAR << data      << TRACING_QUOTECHAR << std::endl;
-    else
-        DBG_APP << "Warning, tracing stream for reception is closed";
-    out_stream.close();
-}
-
-const void TracingApp::traceSend(std::string msgID, std::string data, std::string noise, std::string attacker) const {
-    std::ofstream out_stream;
-    out_stream.open(traceSendFile, std::ios_base::app);
-    if(out_stream.is_open())
-        out_stream <<
-          TRACING_QUOTECHAR << getMyID() << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
-          TRACING_QUOTECHAR << msgID     << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
-          TRACING_QUOTECHAR << data      << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
-          TRACING_QUOTECHAR << noise     << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
-          TRACING_QUOTECHAR << attacker  << TRACING_QUOTECHAR << std::endl;
-    else
-        DBG_APP << "Warning, tracing stream for sending is closed";
-    out_stream.close();
-}
-
-const void TracingApp::traceSend(std::string msgID, std::string senderID, std::string data, std::string noise, std::string attacker) const {
-    std::ofstream out_stream;
-    out_stream.open(traceSendFile, std::ios_base::app);
-    if(out_stream.is_open())
-        out_stream <<
-          TRACING_QUOTECHAR << getMyID() << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
-          TRACING_QUOTECHAR << senderID  << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
-          TRACING_QUOTECHAR << msgID     << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
-          TRACING_QUOTECHAR << data      << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
-          TRACING_QUOTECHAR << noise     << TRACING_QUOTECHAR << TRACING_SEPARATOR <<
-          TRACING_QUOTECHAR << attacker  << TRACING_QUOTECHAR << std::endl;
-    else
-        DBG_APP << "Warning, tracing stream for sending is closed";
+        DBG_APP << "Warning, tracing stream is closed";
     out_stream.close();
 }
 
@@ -101,17 +57,11 @@ void TracingApp::initialize(int stage) {
     if (stage == 0) {
         //Initializing members and pointers of your application goes here
         EV << "Initializing " << par("appName").stringValue() << std::endl;
-        std::ostringstream out_rcv; out_rcv << par("traceRcvFile").stdstringValue() << getMyID() << ".csv";
-        traceRcvFile = out_rcv.str();
+        std::ostringstream out_json; out_json << par("traceJSONFile").stdstringValue() << getMyID() << ".json";
+        traceJSONFile = out_json.str();
 
-        std::ostringstream out_gps; out_gps << par("traceGPSFile").stdstringValue() << getMyID() << ".csv";
-        traceGPSFile = out_gps.str();
-
-        //open immediately, because this file is separate for every vehicle
-        //traceRcvStream.open(out_rcv.str(), std::ios_base::app);
-
-        std::ostringstream out_send; out_send << par("traceSendFile").stdstringValue() << ".csv";
-        traceSendFile = out_send.str();
+        std::ostringstream out_gt_json; out_gt_json << par("traceGroundTruthJSONFile").stdstringValue() << getMyID() << ".json";
+        traceGroundTruthJSONFile = out_gt_json.str();
     }
     else if (stage == 1) {
         //Initializing members that require initialized other modules goes here
@@ -129,8 +79,38 @@ void TracingApp::onBSM(BasicSafetyMessage* bsm) {
     //Your application has received a beacon message from another car or RSU
     //code for handling the message goes here
     Coord pos = bsm->getSenderPos();
-    std::stringstream tmp; tmp << pos.x << ", " << pos.y << ", " << pos.z;
-    traceRcv(std::to_string(bsm->getTreeId()), std::to_string(bsm->getSenderAddress()), tmp.str());
+
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
+
+    writer.StartObject();
+
+    writer.Key("type");
+    writer.Uint(TYPE_BEACON);
+    writer.Key("time");
+    writer.Double(simTime().dbl());
+    writer.Key("sender");
+    writer.Uint(bsm->getSenderAddress());
+    writer.Key("messageID");
+    writer.Uint(bsm->getTreeId());
+
+    writer.Key("pos");
+    writer.StartArray();
+    writer.Double(pos.x);
+    writer.Double(pos.y);
+    writer.Double(pos.z);
+    writer.EndArray();
+
+    writer.Key("pos_noise");
+    writer.StartArray();
+    writer.Double(0.0);
+    writer.Double(0.0);
+    writer.Double(0.0);
+    writer.EndArray();
+
+    writer.EndObject();
+
+    traceJSON(traceJSONFile, s.GetString());
 }
 
 void TracingApp::onWSM(WaveShortMessage* wsm) {
@@ -155,8 +135,38 @@ void TracingApp::populateWSM(WaveShortMessage* wsm, int rcvId, int serial){
     BaseWaveApplLayer::populateWSM(wsm, rcvId, serial);
     if(BasicSafetyMessage* bsm = dynamic_cast<BasicSafetyMessage*>(wsm)){
         Coord pos = bsm->getSenderPos();
-        std::stringstream tmp; tmp << pos.x << ", " << pos.y << ", " << pos.z;
-        traceSend(std::to_string(bsm->getTreeId()), tmp.str(), std::to_string(0), "false");
+        
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartObject();
+
+        writer.Key("type");
+        writer.Uint(TYPE_TRUTH_BEACON);
+        writer.Key("time");
+        writer.Double(simTime().dbl());
+        writer.Key("sender");
+        writer.Uint(bsm->getSenderAddress());
+        writer.Key("messageID");
+        writer.Uint(bsm->getTreeId());
+
+        writer.Key("pos");
+        writer.StartArray();
+        writer.Double(pos.x);
+        writer.Double(pos.y);
+        writer.Double(pos.z);
+        writer.EndArray();
+
+        writer.Key("pos_noise");
+        writer.StartArray();
+        writer.Double(0.0);
+        writer.Double(0.0);
+        writer.Double(0.0);
+        writer.EndArray();
+
+        writer.EndObject();
+
+        traceJSON(traceGroundTruthJSONFile, s.GetString());
     }
 }
 
@@ -165,6 +175,31 @@ void TracingApp::handlePositionUpdate(cObject* obj) {
     //the vehicle has moved. Code that reacts to new positions goes here.
     //member variables such as currentPosition and currentSpeed are updated in the parent class
 
-    std::stringstream tmp; tmp << curPosition.x << ", " << curPosition.y << ", " << curPosition.z;
-    traceGPS(tmp.str(), "");
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
+
+    writer.StartObject();
+
+    writer.Key("type");
+    writer.Uint(TYPE_GPS);
+    writer.Key("time");
+    writer.Double(simTime().dbl());
+
+    writer.Key("pos");
+    writer.StartArray();
+    writer.Double(curPosition.x);
+    writer.Double(curPosition.y);
+    writer.Double(curPosition.z);
+    writer.EndArray();
+
+    writer.Key("noise");
+    writer.StartArray();
+    writer.Double(0.0);
+    writer.Double(0.0);
+    writer.Double(0.0);
+    writer.EndArray();
+
+    writer.EndObject();
+
+    traceJSON(traceJSONFile, s.GetString());
 }

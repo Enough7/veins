@@ -38,15 +38,19 @@ using namespace omnetpp;
  *
  */
 
+#define TYPE_GPS 2
+#define TYPE_BEACON 3
+#define TYPE_TRUTH_BEACON 4
+
 class TracingApp : public BaseWaveApplLayer {
     private:
-        std::string traceRcvFile;
-        std::string traceSendFile;
-        std::string traceGPSFile;
+        std::string traceJSONFile;
+        std::string traceGroundTruthJSONFile;
 
     public:
         virtual void initialize(int stage);
         virtual void finish();
+
     protected:
         virtual void onBSM(BasicSafetyMessage* bsm);
         virtual void onWSM(WaveShortMessage* wsm);
@@ -61,10 +65,7 @@ class TracingApp : public BaseWaveApplLayer {
         virtual const double getMySpeed() const;
         virtual const double getAngle() const;
 
-        virtual const void traceSend(std::string msgID, std::string data, std::string noise, std::string attacker) const;
-        virtual const void traceSend(std::string msgID, std::string senderID, std::string data, std::string noise, std::string attacker) const;
-        virtual const void traceRcv(std::string msgID, std::string senderID, std::string data) const;
-        virtual const void traceGPS(std::string data, std::string noise) const;
+        virtual const void traceJSON(std::string file, std::string JSONObject) const;
     };
 
 #endif

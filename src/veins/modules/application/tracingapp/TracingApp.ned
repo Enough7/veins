@@ -28,7 +28,6 @@ simple TracingApp extends BaseWaveApplLayer
 {
     @class(TracingApp);
     string appName = default("App that traces data!");
-    string traceRcvFile = default("rcvlog-");
-    string traceSendFile = default("sendlog-");
-    string traceGPSFile = default("GPSlog-");
+    string traceJSONFile = default("JSONlog-");
+    string traceGroundTruthJSONFile = default("GroundTruthJSONlog-");
 }

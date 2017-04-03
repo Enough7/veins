@@ -1,4 +1,8 @@
 #include "AttackerApp.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
+
+using namespace rapidjson;
 
 Define_Module(AttackerApp);
 
@@ -7,6 +11,12 @@ void AttackerApp::initialize(int stage) {
     if (stage == 0) {
         // initialize
         EV << "Initializing attacker" << std::endl;
+
+        std::ostringstream out_json; out_json << par("traceJSONFile").stdstringValue() << getMyID() << ".json";
+        traceJSONFile = out_json.str();
+        std::ostringstream out_gt_json; out_gt_json << par("traceGroundTruthJSONFile").stdstringValue() << ".json";
+        traceGroundTruthJSONFile = out_gt_json.str();
+
         attacker = false;
         attackerType = ATTACKER_TYPE_NO_ATTACKER;
 
@@ -68,8 +78,40 @@ void AttackerApp::populateWSM(WaveShortMessage* wsm, int rcvId, int serial) {
     BaseWaveApplLayer::populateWSM(wsm, rcvId, serial);
     if (BasicSafetyMessage* bsm = dynamic_cast<BasicSafetyMessage*>(wsm)) {
         Coord pos = bsm->getSenderPos();
-        std::stringstream tmp; tmp << pos.x << ", " << pos.y << ", " << pos.z;
-        traceSend(std::to_string(bsm->getTreeId()), std::to_string(bsm->getSenderAddress()), tmp.str(), std::to_string(0), std::to_string(attackerType));
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartObject();
+
+        writer.Key("type");
+        writer.Uint(TYPE_TRUTH_BEACON);
+        writer.Key("time");
+        writer.Double(simTime().dbl());
+        writer.Key("sender");
+        writer.Uint(bsm->getSenderAddress());
+        writer.Key("attackerType");
+        writer.Uint(attackerType);
+        writer.Key("messageID");
+        writer.Uint(bsm->getTreeId());
+
+        writer.Key("pos");
+        writer.StartArray();
+        writer.Double(pos.x);
+        writer.Double(pos.y);
+        writer.Double(pos.z);
+        writer.EndArray();
+
+        writer.Key("pos_noise");
+        writer.StartArray();
+        writer.Double(0.0);
+        writer.Double(0.0);
+        writer.Double(0.0);
+        writer.EndArray();
+
+        writer.EndObject();
+
+        traceJSON(traceGroundTruthJSONFile, s.GetString());
     }
 }
 
