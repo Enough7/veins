@@ -38,10 +38,11 @@ simple AttackerApp extends TracingApp
                                                   // to select multiple attacker types, use the sum of the requested attacker types
                                                   // example: to select the attacker types 1 and 2, you need to set attackerType to 3 (= 1 + 2)
                                                   //
-                                                  // 1: sets the position in BSMs to a const value (can be specified in the parameters attackerXPos and attackerYPos)
-                                                  // 2: sets the position in BSMs to a dynamic value (newXPos = xPos + attackerXOffset, newYPos = yPos + attackerYOffset)
-                                                  // 4: calls 1 with a random position (on the playground)
-                                                  // 8: calls 2 with a random position (minOffset = attackerPosRangeMin, maxOffset = attackerPosRangeMax)
+                                                  // 1:  sets the position in BSMs to a const value (can be specified in the parameters attackerXPos and attackerYPos)
+                                                  // 2:  sets the position in BSMs to a dynamic value (newXPos = xPos + attackerXOffset, newYPos = yPos + attackerYOffset)
+                                                  // 4:  calls 1 with a random position (on the playground)
+                                                  // 8:  calls 2 with a random position (minOffset = attackerPosRangeMin, maxOffset = attackerPosRangeMax)
+                                                  // 16: stays at the nodes first position and does not move
                                                 
     string attackerTypeProbability = default(""); // probability for each attacker type
                                                   // example: to set the probability for the first selected attacker type to 0.3 and for the second selected attacker type to 0.7,

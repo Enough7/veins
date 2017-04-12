@@ -19,6 +19,7 @@ void AttackerApp::initialize(int stage) {
 
         attacker = false;
         attackerType = ATTACKER_TYPE_NO_ATTACKER;
+        position = this->getMyPosition();
 
         attackerPosRangeMin = par("attackerPosRangeMin").doubleValue();
         attackerPosRangeMax = par("attackerPosRangeMax").doubleValue();
@@ -131,6 +132,9 @@ void AttackerApp::attackBSM(BasicSafetyMessage* bsm) {
     case ATTACKER_TYPE_RANDOM_DYNAMIC_POSITION:
         attackSetRandomDynamicPosition(bsm);
         break;
+    case ATTACKER_TYPE_STAY_AT_POSITION:
+        attackerSetCurrentPosition(bsm);
+        break;
     default:
         DBG_APP << "Unknown attacker type! Type: " << attackerType << endl;
     }
@@ -167,6 +171,10 @@ void AttackerApp::attackSetRandomDynamicPosition(BasicSafetyMessage* bsm) {
     attackSetDynamicPosition(bsm, randomPositionInRange.x, randomPositionInRange.y);
 }
 
+void AttackerApp::attackerSetCurrentPosition(BasicSafetyMessage* bsm) {
+    bsm->setSenderPos(position);
+}
+
 Coord AttackerApp::getRandomPosition() {
     if(world == NULL) {
         world = FindModule<BaseWorldUtility*>::findGlobalModule();
@@ -183,7 +191,7 @@ int AttackerApp::getRandomAttackerType() {
 
     // calculate attacker types count
     if(attackerTypesCount < 0) {
-        std::size_t longSize = sizeof(long);
+        std::size_t longSize = sizeof(long) * 8;
         attackerTypesCount = 0;
         for(int i = 0; i < longSize; i++) {
             if(attackerTypes & (1<<i)) {

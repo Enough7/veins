@@ -21,6 +21,7 @@
 #define ATTACKER_TYPE_DYNAMIC_POSITION 2
 #define ATTACKER_TYPE_RANDOM_POSITION 4
 #define ATTACKER_TYPE_RANDOM_DYNAMIC_POSITION 8
+#define ATTACKER_TYPE_STAY_AT_POSITION 16
 
 using namespace omnetpp;
 
@@ -34,6 +35,7 @@ class AttackerApp : public TracingApp
         bool attacker;
         double attackerPosRangeMin;
         double attackerPosRangeMax;
+        Coord position;
         int attackerType;
         std::string traceJSONFile;
         std::string traceGroundTruthJSONFile;
@@ -50,6 +52,7 @@ class AttackerApp : public TracingApp
         virtual void attackSetDynamicPosition(BasicSafetyMessage* bsm, double xPos, double yPos);
         virtual void attackSetRandomPosition(BasicSafetyMessage* bsm);
         virtual void attackSetRandomDynamicPosition(BasicSafetyMessage* bsm);
+        virtual void attackerSetCurrentPosition(BasicSafetyMessage* bsm);
         virtual Coord getRandomPosition();
         virtual Coord getRandomPositionInRange();
         virtual int getRandomAttackerType();
