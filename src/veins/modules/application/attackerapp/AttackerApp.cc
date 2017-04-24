@@ -1,4 +1,7 @@
 #include "AttackerApp.h"
+
+#include <cmath> // std::abs
+
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
 
