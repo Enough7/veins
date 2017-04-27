@@ -69,6 +69,11 @@ void TracingApp::initialize(int stage) {
     }
 }
 
+void TracingApp::setFileNames(std::string traceJSONFile, std::string traceGroundTruthJSONFile) {
+    this->traceJSONFile = traceJSONFile;
+    this->traceGroundTruthJSONFile = traceGroundTruthJSONFile;
+}
+
 void TracingApp::finish() {
     BaseWaveApplLayer::finish();
     //statistics recording goes here

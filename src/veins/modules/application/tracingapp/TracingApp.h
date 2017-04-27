@@ -49,6 +49,7 @@ class TracingApp : public BaseWaveApplLayer {
 
     public:
         virtual void initialize(int stage);
+        virtual void setFileNames(std::string traceJSONFile, std::string traceGroundTruthJSONFile);
         virtual void finish();
 
     protected:

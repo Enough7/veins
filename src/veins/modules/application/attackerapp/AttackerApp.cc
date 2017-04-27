@@ -15,11 +15,6 @@ void AttackerApp::initialize(int stage) {
         // initialize
         EV << "Initializing attacker" << std::endl;
 
-        std::ostringstream out_json; out_json << par("traceJSONFile").stdstringValue() << getMyID() << ".json";
-        traceJSONFile = out_json.str();
-        std::ostringstream out_gt_json; out_gt_json << par("traceGroundTruthJSONFile").stdstringValue() << ".json";
-        traceGroundTruthJSONFile = out_gt_json.str();
-
         attacker = false;
         attackerType = ATTACKER_TYPE_NO_ATTACKER;
         position = this->getMyPosition();
@@ -40,6 +35,11 @@ void AttackerApp::initialize(int stage) {
                 }
             }
         }
+        std::ostringstream out_json; out_json << par("traceJSONFile").stdstringValue() << getMyID() << "-" << getParentModule()->getId()<< "-A" << attackerType << ".json";
+        traceJSONFile = out_json.str();
+        std::ostringstream out_gt_json; out_gt_json << par("traceGroundTruthJSONFile").stdstringValue() << ".json";
+        traceGroundTruthJSONFile = out_gt_json.str();
+        TracingApp::setFileNames(traceJSONFile, traceGroundTruthJSONFile);
     }
 }
 
