@@ -108,7 +108,7 @@ echo " "
  
 mkdir -vp "${SLURM_SUBMIT_DIR}" # if user has deleted or moved the submit dir
 echo "Creating result tgz-file '${JOB_WORK_DIR}.tgz' ..."
-tar -zcvf "${JOB_WORK_DIR}.tgz" "${SIMULATION_DIR}" \
+tar --exclude "DUARoutes" --exclude "misc" --exclude "*.xml" -zcvf "${JOB_WORK_DIR}.tgz" "${SIMULATION_DIR}" \
   || { echo "ERROR: Failed to create tgz-file. Please cleanup JOB_WORK_DIR '$JOB_WORK_DIR' on host '$HOSTNAME' manually (if not done automatically by queueing system)."; exit 102; }
 mv "${JOB_WORK_DIR}.tgz" "${HOME}/"
  
