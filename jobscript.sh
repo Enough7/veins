@@ -16,10 +16,8 @@ fi
 # Queue variable. Currently no jobs are in the queue.
 declare -i QUEUE
 QUEUE=$(showq | grep "Total jobs" | sed -r "s/Total jobs:[ ]*([0-9]*)/\1/g")
-#UPPER_LIMIT_DAY=49
-#UPPER_LIMIT_NIGHT=49
-UPPER_LIMIT_DAY=1
-UPPER_LIMIT_NIGHT=1
+UPPER_LIMIT_DAY=49
+UPPER_LIMIT_NIGHT=49
 
 # Job submission script
 JOB_SUBMISSION_SCRIPT=$HOME/veins/job.moab
