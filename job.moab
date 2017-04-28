@@ -50,9 +50,10 @@ echo "Number of cores allocated to job:     $MOAB_PROCCOUNT"
  
 VEINS_DIR="${HOME}/veins"
 
-export SUMO_HOME="${HOME}/sumo/sumo-0.29.0/bin"
-export OMNETPP_HOME="${HOME}/omnetpp/omnetpp-5.0/bin"
-export PATH="${PATH}:${SUMO_HOME}:${OMNETPP_HOME}"
+export SUMO_HOME="${HOME}/sumo/sumo-0.29.0"
+export SUMO_BIN="${SUMO_HOME}/bin"
+export OMNETPP_BIN="${HOME}/omnetpp/omnetpp-5.0/bin"
+export PATH="${PATH}:${SUMO_BIN}:${OMNETPP_BIN}"
  
 # Create Work Dir
  
@@ -71,7 +72,7 @@ cd "${JOB_WORK_DIR}"
 cp -r "${VEINS_DIR}" "${JOB_WORK_DIR}"
 export SIMULATION_DIR="${JOB_WORK_DIR}/veins/simulations/lust"
 
-echo "OMNET_BIN_DIR = $OMNETPP_HOME"
+echo "OMNET_BIN_DIR = $OMNETPP_BIN"
 
 cd "${SIMULATION_DIR}"
 
