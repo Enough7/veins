@@ -83,9 +83,7 @@ echo "##############################"
 
 for K in $(seq ${L} ${H}); do
 # Execute opp_run with runnumber $RUN and config $CONFIG
- LISTENING_PORT="`${HOME}/findFreePort.sh`"
  cp omnetpp.ini omnetpp_${K}.ini
- echo "*.manager.port = ${LISTENING_PORT}" >> omnetpp_${K}.ini
  echo "./run -c "$CONFIG" -f omnetpp_${K}.ini -r "${K}" > RUN_${K}.txt"
  ./run -c "$CONFIG" -f omnetpp_${K}.ini -r "${K}" > RUN_${K}.txt
  sleep 1

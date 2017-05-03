@@ -70,7 +70,7 @@ do
   fi
 
   echo "Added JOB: ${JOBID} for RUN ${L}"
-  sleep 10
+  sleep 1
   if [ ${CONFIG_NUMBER} -le ${CURR_CONFIG} ]; then
     break
   fi
