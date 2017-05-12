@@ -36,15 +36,18 @@ class AttackerApp : public TracingApp
         double attackerPosRangeMin;
         double attackerPosRangeMax;
         Coord position;
+        bool positionInitialized;
         int attackerType;
         std::string traceJSONFile;
         std::string traceGroundTruthJSONFile;
+        double stayAtPositionProbability;
 
     public:
         virtual void initialize(int stage);
     protected:
         virtual void handleSelfMsg(cMessage* msg);
         virtual void populateWSM(WaveShortMessage* wsm, int rcvId=0, int serial=0);
+        virtual void handlePositionUpdate(cObject* obj);
         virtual void attackBSM(BasicSafetyMessage* bsm);
         virtual void attackSetConstPosition(BasicSafetyMessage* bsm);
         virtual void attackSetConstPosition(BasicSafetyMessage* bsm, double xPos, double yPos);

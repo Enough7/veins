@@ -17,7 +17,8 @@ void AttackerApp::initialize(int stage) {
 
         attacker = false;
         attackerType = ATTACKER_TYPE_NO_ATTACKER;
-        position = this->getMyPosition();
+        positionInitialized = false;
+        stayAtPositionProbability = 0.0;
 
         attackerPosRangeMin = par("attackerPosRangeMin").doubleValue();
         attackerPosRangeMax = par("attackerPosRangeMax").doubleValue();
@@ -119,6 +120,13 @@ void AttackerApp::populateWSM(WaveShortMessage* wsm, int rcvId, int serial) {
     }
 }
 
+void AttackerApp::handlePositionUpdate(cObject* obj) {
+    TracingApp::handlePositionUpdate(obj);
+    if((attackerType == ATTACKER_TYPE_STAY_AT_POSITION) && !positionInitialized) {
+        stayAtPositionProbability += 0.025;
+    }
+}
+
 //TODO: implement more attacker
 void AttackerApp::attackBSM(BasicSafetyMessage* bsm) {
     switch(attackerType)
@@ -175,7 +183,14 @@ void AttackerApp::attackSetRandomDynamicPosition(BasicSafetyMessage* bsm) {
 }
 
 void AttackerApp::attackerSetCurrentPosition(BasicSafetyMessage* bsm) {
-    bsm->setSenderPos(position);
+    if(positionInitialized) {
+        bsm->setSenderPos(position);
+    } else {
+        if(dblrand() <= std::abs(stayAtPositionProbability)) {
+            position = Coord(bsm->getSenderPos());
+            positionInitialized = true;
+        }
+    }
 }
 
 Coord AttackerApp::getRandomPosition() {
