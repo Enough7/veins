@@ -15,12 +15,14 @@ doc/neddoc
 
 tests/**/results
 tests/**/.tkenvrc
+tests/**/.tkenvlog
 tests/**/.qtenvrc
 tests/**/out.tmp
 tests/**/err.tmp
 
 examples/**/results
 examples/**/.tkenvrc
+examples/**/.tkenvlog
 examples/**/.qtenvrc
 examples/**/.cmdenv-log
 examples/**/valgrind.out
@@ -43,6 +45,7 @@ subprojects/veins_inet/examples/**/valgrind.out
 
 simulations/lust/results
 simulations/lust/.tkenvrc
+simulations/lust/.tkenvlog
 simulations/lust/.cmdenv-log
 simulations/lust/valgrind.out
 simulations/lust/dua.static.log
