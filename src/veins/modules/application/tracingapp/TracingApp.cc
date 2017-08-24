@@ -92,8 +92,10 @@ void TracingApp::onBSM(BasicSafetyMessage* bsm) {
 
     writer.Key("type");
     writer.Uint(TYPE_BEACON);
-    writer.Key("time");
+    writer.Key("rcvTime");
     writer.Double(simTime().dbl());
+    writer.Key("sendTime");
+    writer.Double(bsm->getTimestamp());
     writer.Key("sender");
     writer.Uint(bsm->getSenderAddress());
     writer.Key("messageID");
@@ -148,8 +150,8 @@ void TracingApp::populateWSM(WaveShortMessage* wsm, int rcvId, int serial){
 
         writer.Key("type");
         writer.Uint(TYPE_TRUTH_BEACON);
-        writer.Key("time");
-        writer.Double(simTime().dbl());
+        writer.Key("sendTime");
+        writer.Double(bsm->getTimestamp());
         writer.Key("sender");
         writer.Uint(bsm->getSenderAddress());
         writer.Key("messageID");
@@ -187,7 +189,7 @@ void TracingApp::handlePositionUpdate(cObject* obj) {
 
     writer.Key("type");
     writer.Uint(TYPE_GPS);
-    writer.Key("time");
+    writer.Key("rcvTime");
     writer.Double(simTime().dbl());
 
     writer.Key("pos");
