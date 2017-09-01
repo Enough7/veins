@@ -38,6 +38,9 @@ packet WaveShortMessage {
 	//Data of Wave Short Message
 	string wsmData = "Some Data";
 
+    //RSSI
+    double RSSI;
+
 	int senderAddress = 0;
 	int recipientAddress = -1;
 	int serial = 0;
