@@ -469,7 +469,7 @@ simtime_t Decider80211p::processSignalEnd(AirFrame* msg) {
 		DBG_D11P << "packet was received correctly, it is now handed to upper layer...\n";
 		// go on with processing this AirFrame, send it to the Mac-Layer
         
-        WaveShortMessage* decap = dynamic_cast<WaveShortMessage*>(static_cast<Mac80211Pkt*>(frame->decapsulate())->decapsulate());
+        WaveShortMessage* decap = dynamic_cast<WaveShortMessage*>(static_cast<Mac80211Pkt*>(frame->getEncapsulatedPacket())->getEncapsulatedPacket());
 
         simtime_t start = frame->getSignal().getReceptionStart();
         simtime_t end = frame->getSignal().getReceptionEnd();
