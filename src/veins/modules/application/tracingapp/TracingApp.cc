@@ -115,6 +115,9 @@ void TracingApp::onBSM(BasicSafetyMessage* bsm) {
     writer.Double(0.0);
     writer.EndArray();
 
+    writer.Key("RSSI");
+    writer.Double(bsm->getRSSI());
+
     writer.EndObject();
 
     traceJSON(traceJSONFile, s.GetString());
