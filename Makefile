@@ -68,3 +68,5 @@ doxy:
 doxyshow: doxy
 	xdg-open doc/doxy/index.html
 
+test:
+	./test.sh
