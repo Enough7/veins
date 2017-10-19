@@ -20,7 +20,7 @@ UPPER_LIMIT_DAY=49
 UPPER_LIMIT_NIGHT=49
 
 # Job submission script
-JOB_SUBMISSION_SCRIPT=$HOME/veins/job.moab
+JOB_SUBMISSION_SCRIPT=$HOME/veins-maat/job.moab
  
 export OMNETPP_HOME="${HOME}/omnetpp/omnetpp-5.1.1/bin"
 export PATH="${PATH}:${OMNETPP_HOME}"

@@ -48,7 +48,7 @@ echo "Job name:                             $MOAB_JOBNAME"
 echo "Number of nodes allocated to job:     $MOAB_NODECOUNT"
 echo "Number of cores allocated to job:     $MOAB_PROCCOUNT"
  
-VEINS_DIR="${HOME}/veins"
+VEINS_DIR="${HOME}/veins-maat"
 
 export SUMO_HOME="${HOME}/sumo/sumo-0.29.0"
 export SUMO_BIN="${SUMO_HOME}/bin"
@@ -70,7 +70,7 @@ mkdir -vp "${JOB_WORK_DIR}"
 cd "${JOB_WORK_DIR}"
  
 cp -r "${VEINS_DIR}" "${JOB_WORK_DIR}"
-export SIMULATION_DIR="${JOB_WORK_DIR}/veins/simulations/lust"
+export SIMULATION_DIR="${JOB_WORK_DIR}/veins-maat/simulations/lust"
 
 echo "OMNET_BIN_DIR = $OMNETPP_BIN"
 
