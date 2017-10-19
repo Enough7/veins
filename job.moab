@@ -15,7 +15,9 @@ CONFIG=$1
 L=$2
 H=$L
 VEINS_DIR=$3
- 
+
+module load compiler/gnu #make sure correct libstdc++.so.6 is loaded (hopefully....)
+
 start=$(date +%s)
  
 echo " "
