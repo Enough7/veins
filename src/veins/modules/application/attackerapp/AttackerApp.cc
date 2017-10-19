@@ -83,6 +83,7 @@ void AttackerApp::populateWSM(WaveShortMessage* wsm, int rcvId, int serial) {
     BaseWaveApplLayer::populateWSM(wsm, rcvId, serial);
     if (BasicSafetyMessage* bsm = dynamic_cast<BasicSafetyMessage*>(wsm)) {
         Coord pos = bsm->getSenderPos();
+        Coord spd = bsm->getSenderSpeed();
 
         StringBuffer s;
         Writer<StringBuffer> writer(s);
@@ -108,6 +109,20 @@ void AttackerApp::populateWSM(WaveShortMessage* wsm, int rcvId, int serial) {
         writer.EndArray();
 
         writer.Key("pos_noise");
+        writer.StartArray();
+        writer.Double(0.0);
+        writer.Double(0.0);
+        writer.Double(0.0);
+        writer.EndArray();
+
+        writer.Key("spd");
+        writer.StartArray();
+        writer.Double(spd.x);
+        writer.Double(spd.y);
+        writer.Double(spd.z);
+        writer.EndArray();
+
+        writer.Key("spd_noise");
         writer.StartArray();
         writer.Double(0.0);
         writer.Double(0.0);
