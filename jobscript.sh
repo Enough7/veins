@@ -22,12 +22,12 @@ UPPER_LIMIT_NIGHT=49
 # Job submission script
 JOB_SUBMISSION_SCRIPT=$HOME/veins/job.moab
  
-export OMNETPP_HOME="${HOME}/omnetpp/omnetpp-5.0/bin"
+export OMNETPP_HOME="${HOME}/omnetpp/omnetpp-5.1.1/bin"
 export PATH="${PATH}:${OMNETPP_HOME}"
 echo "OMNET_BIN_DIR = $OMNETPP_HOME"
  
 # Use SED to get the amount of configs.
-CONFIG_NUMBER=$(opp_run -x "${CONFIG}" -f "${INI_FILE}" | sed -r -n 's/Number of runs: ([0-9]*)/\1/p')
+CONFIG_NUMBER=$(opp_run -q runs -c "${CONFIG}" -f "${INI_FILE}" | sed -r -n 's/Number of runs: ([0-9]*)/\1/p')
 if [ -z ${CONFIG_NUMBER} ]; then
   echo "No configurations for ${CONFIG}!"
   exit

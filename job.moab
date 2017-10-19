@@ -52,7 +52,7 @@ VEINS_DIR="${HOME}/veins"
 
 export SUMO_HOME="${HOME}/sumo/sumo-0.29.0"
 export SUMO_BIN="${SUMO_HOME}/bin"
-export OMNETPP_BIN="${HOME}/omnetpp/omnetpp-5.0/bin"
+export OMNETPP_BIN="${HOME}/omnetpp/omnetpp-5.1.1/bin"
 export PATH="${PATH}:${SUMO_BIN}:${OMNETPP_BIN}"
  
 # Create Work Dir
