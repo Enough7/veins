@@ -14,6 +14,7 @@ from optparse import OptionParser
 # Option handling
 parser = OptionParser()
 parser.add_option("--with-inet", dest="inet", help='Option discontinued in favor of a subproject in subprojects/veins_inet/')
+parser.add_option("--include", dest="includePath", help='Option that can be used to include additional libraries')
 (options, args) = parser.parse_args()
 
 if args:
@@ -31,6 +32,8 @@ if options.inet:
         error('--with-inet has been discontinued in favor of a subproject in subprojects/veins_inet/')
         sys.exit(1)
 
+if options.includePath:
+    makemake_flags = makemake_flags + [ '-I', options.includePath ]
 
 # Start creating files
 if not os.path.isdir('out'):
