@@ -14,6 +14,7 @@
 CONFIG=$1
 L=$2
 H=$L
+VEINS_DIR=$3
  
 start=$(date +%s)
  
@@ -48,8 +49,6 @@ echo "Job name:                             $MOAB_JOBNAME"
 echo "Number of nodes allocated to job:     $MOAB_NODECOUNT"
 echo "Number of cores allocated to job:     $MOAB_PROCCOUNT"
  
-VEINS_DIR="${HOME}/veins-maat"
-
 export SUMO_HOME="${HOME}/sumo/sumo-0.29.0"
 export SUMO_BIN="${SUMO_HOME}/bin"
 export OMNETPP_BIN="${HOME}/omnetpp/omnetpp-5.1.1/bin"

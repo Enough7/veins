@@ -6,6 +6,7 @@ fi
 
 CONFIG=$1
 INI_FILE=$2
+VEINS_ROOT="`pwd`"
 
 declare -i CURR_CONFIG
 CURR_CONFIG=0
@@ -20,7 +21,7 @@ UPPER_LIMIT_DAY=49
 UPPER_LIMIT_NIGHT=49
 
 # Job submission script
-JOB_SUBMISSION_SCRIPT=$HOME/veins-maat/job.moab
+JOB_SUBMISSION_SCRIPT=${VEINS_ROOT}/job.moab
  
 export OMNETPP_HOME="${HOME}/omnetpp/omnetpp-5.1.1/bin"
 export PATH="${PATH}:${OMNETPP_HOME}"
@@ -62,8 +63,8 @@ do
   # Add jobs until we reach the upper limit.
   L=$CURR_CONFIG
  
-  echo "msub $JOB_SUBMISSION_SCRIPT $CONFIG $L $L"
-  JOBID=$(msub $JOB_SUBMISSION_SCRIPT $CONFIG $L)
+  echo "msub $JOB_SUBMISSION_SCRIPT $CONFIG $L ${VEINS_ROOT}"
+  JOBID=$(msub $JOB_SUBMISSION_SCRIPT $CONFIG $L ${VEINS_ROOT})
   if [ 0 -eq $? ]; then
     let "QUEUE++"
     let "CURR_CONFIG+=1"
