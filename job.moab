@@ -100,7 +100,7 @@ if [ $RES_FILE_COUNT -lt $RUNS ]; then
  echo "Not all runs ran through"
 fi
 
-mv "${SIMULATION_DIR}/*.json" "${SIMULATION_DIR}/results/"
+mv "${SIMULATION_DIR}/"*.json "${SIMULATION_DIR}/results/"
  
 echo " "
 echo "### Compressing results and copying back result archive ..."
@@ -116,7 +116,7 @@ mv "${JOB_WORK_DIR}.tgz" "${HOME}/veins-maat-output/"
 echo " "
 echo "### Final cleanup..."
 echo " "
-rm -rvf "${JOB_WORK_DIR}"
+#rm -rvf "${JOB_WORK_DIR}"
 echo "END_TIME             = `date +'%y-%m-%d %H:%M:%S %s'`"
  
 end=$(date +%s)
