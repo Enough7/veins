@@ -71,7 +71,7 @@ mkdir -vp "${JOB_WORK_DIR}"
 cd "${JOB_WORK_DIR}"
  
 cp -r "${VEINS_DIR}" "${JOB_WORK_DIR}"
-export SIMULATION_DIR="${JOB_WORK_DIR}/veins-maat/simulations/lust"
+export SIMULATION_DIR="${JOB_WORK_DIR}/veins-maat/simulations/securecomm2018"
 
 echo "OMNET_BIN_DIR = $OMNETPP_BIN"
 
@@ -110,7 +110,8 @@ mkdir -vp "${SLURM_SUBMIT_DIR}" # if user has deleted or moved the submit dir
 echo "Creating result tgz-file '${JOB_WORK_DIR}.tgz' ..."
 tar --exclude "DUARoutes" --exclude "misc" --exclude "*.xml" -zcvf "${JOB_WORK_DIR}.tgz" "${SIMULATION_DIR}" \
   || { echo "ERROR: Failed to create tgz-file. Please cleanup JOB_WORK_DIR '$JOB_WORK_DIR' on host '$HOSTNAME' manually (if not done automatically by queueing system)."; exit 102; }
-mv "${JOB_WORK_DIR}.tgz" "${HOME}/"
+mkdir -p "${HOME}/veins-maat-output/"
+mv "${JOB_WORK_DIR}.tgz" "${HOME}/veins-maat-output/"
  
 echo " "
 echo "### Final cleanup..."
