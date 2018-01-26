@@ -58,11 +58,8 @@ class AttackerApp : public TracingApp
         virtual void attackerSetCurrentPosition(BasicSafetyMessage* bsm);
         virtual Coord getRandomPosition();
         virtual Coord getRandomPositionInRange();
-        virtual int getRandomAttackerType();
 };
 
-int AttackerApp::attackerTypesCount = -1;
-std::vector<double> AttackerApp::attackerTypeProbability;
 long AttackerApp::currentAttackerCount = 0;
 BaseWorldUtility* AttackerApp::world = NULL;
 
