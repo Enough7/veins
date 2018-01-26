@@ -23,19 +23,16 @@ void AttackerApp::initialize(int stage) {
         attackerPosRangeMin = par("attackerPosRangeMin").doubleValue();
         attackerPosRangeMax = par("attackerPosRangeMax").doubleValue();
 
-        long attackerMaxCount = par("attackerMaxCount").longValue();
-        if((attackerMaxCount < 0) || (currentAttackerCount < attackerMaxCount)) {
-            // code is based on src/veins/modules/application/ldm/LDMApp.cc from branch alaa-al-momani-thesis
-            double attackerProbability = par("attackerProbability").doubleValue();
-            if((attackerProbability < 0 && currentAttackerCount == 0) // < 0 means *exactly one* attacker.
+        double attackerProbability = par("attackerProbability").doubleValue();
+        if((attackerProbability < 0 && currentAttackerCount == 0) // < 0 means *exactly one* attacker.
                     || (attackerProbability > 0)) {
-                attacker = (dblrand() <= std::abs(attackerProbability));
-                if(attacker) {
-                    attackerType = getRandomAttackerType();
-                    currentAttackerCount++;
-                }
+            attacker = (dblrand() <= std::abs(attackerProbability));
+            if(attacker) {
+                attackerType = par("attackerType");
+                currentAttackerCount++;
             }
         }
+
         std::ostringstream out_json; out_json << par("traceJSONFile").stdstringValue() << getMyID() << "-" << getParentModule()->getId()<< "-A" << attackerType << ".json";
         traceJSONFile = out_json.str();
         std::ostringstream out_gt_json; out_gt_json << par("traceGroundTruthJSONFile").stdstringValue() << ".json";
@@ -217,57 +214,4 @@ Coord AttackerApp::getRandomPosition() {
 
 Coord AttackerApp::getRandomPositionInRange() {
     return Coord(uniform(attackerPosRangeMin, attackerPosRangeMax), uniform(attackerPosRangeMin, attackerPosRangeMax));
-}
-
-int AttackerApp::getRandomAttackerType() {
-    long attackerTypes = par("attackerType").longValue();
-
-    // calculate attacker types count
-    if(attackerTypesCount < 0) {
-        std::size_t longSize = sizeof(long) * 8;
-        attackerTypesCount = 0;
-        for(int i = 0; i < longSize; i++) {
-            if(attackerTypes & (1<<i)) {
-                attackerTypesCount++;
-            }
-        }
-        // get attacker type probability
-        // code is based on https://omnetpp.org/pmwiki/index.php?n=Main.NEDParameterVectors
-        const char *aTProbability = par("attackerTypeProbability");
-        double currentProbability;
-        double probability = 0.0;
-        cStringTokenizer tokenizer(aTProbability);
-        while (tokenizer.hasMoreTokens()) {
-            currentProbability = std::stod(tokenizer.nextToken());
-            attackerTypeProbability.push_back(currentProbability);
-            probability += currentProbability;
-        }
-        if(attackerTypeProbability.size() < attackerTypesCount) {
-            currentProbability = (1.0 - probability) * (double)(1.0 / (attackerTypesCount - attackerTypeProbability.size()));
-            while(attackerTypeProbability.size() < attackerTypesCount) {
-                attackerTypeProbability.push_back(currentProbability);
-            }
-        }
-    }
-
-    // get random attacker type
-    int randomAttackerType = ATTACKER_TYPE_NO_ATTACKER;
-    double currentProbability = 0.0;
-    double randomNumber = dblrand();
-    for(int i = 0; i < attackerTypesCount; i++) {
-        currentProbability += attackerTypeProbability.at(i);
-        if(randomNumber <= currentProbability) {
-            int pos = -1;
-            int attackTypeNum = 0;
-            while(attackTypeNum <= i) {
-                pos++;
-                if(attackerTypes & (1<<pos)) {
-                    attackTypeNum++;
-                }
-            }
-            randomAttackerType = 1<<pos;
-            break;
-         }
-     }
-    return randomAttackerType;
 }
