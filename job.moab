@@ -1,15 +1,15 @@
 #!/bin/bash
-#MSUB -N posverif_sim_job
+#MSUB -N veins_maat
 #MSUB -j oe
-#MSUB -o $(JOBNAME).$(JOBID)
+#MSUB -o $(JOBID).$(JOBNAME)
 #MSUB -m a
 #MSUB -q singlenode
-#MSUB -M 'florian.diemer@uni-ulm.de'
+#MSUB -M 'rens.vanderheijden@uni-ulm.de'
 #MSUB -l nodes=1:ppn=2
 #MSUB -l mem=4000mb
 #MSUB -l walltime=5:00:00
 #
-# NOTE: Param 1 MUST be Config and 2 must be the lower #RUN and 3 the upper #RUN
+# NOTE: Param 1 MUST be Config and 2 must be the lower #RUN and 3 the veins directory
 #
 CONFIG=$1
 L=$2
