@@ -6,8 +6,8 @@
 #MSUB -q singlenode
 #MSUB -M 'rens.vanderheijden@uni-ulm.de'
 #MSUB -l nodes=1:ppn=2
-#MSUB -l mem=4000mb
-#MSUB -l walltime=5:00:00
+#MSUB -l mem=8000mb
+#MSUB -l walltime=12:00:00
 #
 # NOTE: Param 1 MUST be Config and 2 must be the lower #RUN and 3 the veins directory
 #
