@@ -1,6 +1,6 @@
 #!/bin/sh
 
-for x in {1,2,4,8,16}; do
+for x in {1,2,4,8,16,32,33,64}; do
   mkdir $x
   if ! ./run -u Cmdenv -c AttackerType$x -r0 validate.ini
   then

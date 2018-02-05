@@ -23,6 +23,9 @@ void AttackerApp::initialize(int stage) {
         attackerPosRangeMin = par("attackerPosRangeMin").doubleValue();
         attackerPosRangeMax = par("attackerPosRangeMax").doubleValue();
 
+        attackerSpeedRangeMin = par("attackerSpeedRangeMin").doubleValue();
+        attackerSpeedRangeMax = par("attackerSpeedRangeMax").doubleValue();
+
         double attackerProbability = par("attackerProbability").doubleValue();
         if((attackerProbability < 0 && currentAttackerCount == 0) // < 0 means *exactly one* attacker.
                     || (attackerProbability > 0)) {
@@ -135,7 +138,7 @@ void AttackerApp::populateWSM(WaveShortMessage* wsm, int rcvId, int serial) {
 void AttackerApp::handlePositionUpdate(cObject* obj) {
     TracingApp::handlePositionUpdate(obj);
     if((attackerType == ATTACKER_TYPE_STAY_AT_POSITION) && !positionInitialized) {
-        stayAtPositionProbability += 0.025;
+        stayAtPositionProbability += par("stayAtPositionIncrement").doubleValue();
     }
 }
 
@@ -156,11 +159,39 @@ void AttackerApp::attackBSM(BasicSafetyMessage* bsm) {
         attackSetRandomDynamicPosition(bsm);
         break;
     case ATTACKER_TYPE_STAY_AT_POSITION:
-        attackerSetCurrentPosition(bsm);
+        attackSetCurrentPosition(bsm);
+        break;
+    case ATTACKER_TYPE_CONST_SPEED:
+        attackSetConstSpeed(bsm);
+        break;
+    case ATTACKER_TYPE_RANDOM_DYNAMIC_SPEED:
+        attackSetRandomDynamicSpeed(bsm);
         break;
     default:
         DBG_APP << "Unknown attacker type! Type: " << attackerType << endl;
     }
+}
+
+void AttackerApp::attackSetConstSpeed(BasicSafetyMessage* bsm) {
+    attackSetConstSpeed(bsm, par("attackerXSpeed").doubleValue(), par("attackerYSpeed").doubleValue());
+}
+
+void AttackerApp::attackSetConstSpeed(BasicSafetyMessage* bsm, double xSpeed, double ySpeed) {
+    DBG_APP << "Attack: SetConstSpeed (x=" << xSpeed << ", y=" << ySpeed << ")" << std::endl;
+    bsm->setSenderSpeed(Coord(xSpeed, ySpeed, (bsm->getSenderSpeed()).z));
+}
+
+void AttackerApp::attackSetDynamicSpeed(BasicSafetyMessage* bsm, double xSpeed, double ySpeed) {
+    double newXSpeed = (bsm->getSenderSpeed()).x + xSpeed;
+    double newYSpeed = (bsm->getSenderSpeed()).y + ySpeed;
+
+    DBG_APP << "Attack: SetDynamicSpeed (x=" << newXSpeed << ", y=" << newYSpeed << ")" << std::endl;
+    bsm->setSenderSpeed(Coord(newXSpeed, newYSpeed, (bsm->getSenderSpeed()).z));
+}
+
+void AttackerApp::attackSetRandomDynamicSpeed(BasicSafetyMessage* bsm) {
+    Coord randomSpeedInRange = getRandomSpeedInRange();
+    attackSetDynamicSpeed(bsm, randomSpeedInRange.x, randomSpeedInRange.y);
 }
 
 void AttackerApp::attackSetConstPosition(BasicSafetyMessage* bsm) {
@@ -194,7 +225,7 @@ void AttackerApp::attackSetRandomDynamicPosition(BasicSafetyMessage* bsm) {
     attackSetDynamicPosition(bsm, randomPositionInRange.x, randomPositionInRange.y);
 }
 
-void AttackerApp::attackerSetCurrentPosition(BasicSafetyMessage* bsm) {
+void AttackerApp::attackSetCurrentPosition(BasicSafetyMessage* bsm) {
     if(positionInitialized) {
         bsm->setSenderPos(position);
     } else {
@@ -203,6 +234,10 @@ void AttackerApp::attackerSetCurrentPosition(BasicSafetyMessage* bsm) {
             positionInitialized = true;
         }
     }
+}
+
+Coord AttackerApp::getRandomSpeedInRange() {
+    return Coord(uniform(attackerSpeedRangeMin, attackerSpeedRangeMax), uniform(attackerSpeedRangeMin, attackerSpeedRangeMax));
 }
 
 Coord AttackerApp::getRandomPosition() {

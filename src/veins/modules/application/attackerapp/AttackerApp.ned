@@ -28,25 +28,17 @@ simple AttackerApp extends TracingApp
 {
     @class(AttackerApp);
     double attackerProbability = default(0);      // probability that a node is an attacker
-                                                  // attackerProbability < 0: 1 attacker
-                                                
-    int attackerMaxCount = default(-1);           // it's aimed to reach attackerMaxCount, but the effective number of attackers can be higher or lower
-                                                  // attackerMaxCount < 0: no attacker limit
+                                                  // attackerProbability < 0: 1 attacker (with negative value as selection probability)
                                                   
     int attackerType = default(1);				  // specifies the attacker type
-                                                  //
-                                                  // to select multiple attacker types, use the sum of the requested attacker types
-                                                  // example: to select the attacker types 1 and 2, you need to set attackerType to 3 (= 1 + 2)
                                                   //
                                                   // 1:  sets the position in BSMs to a const value (can be specified in the parameters attackerXPos and attackerYPos)
                                                   // 2:  sets the position in BSMs to a dynamic value (newXPos = xPos + attackerXOffset, newYPos = yPos + attackerYOffset)
                                                   // 4:  calls 1 with a random position (on the playground)
                                                   // 8:  calls 2 with a random position (minOffset = attackerPosRangeMin, maxOffset = attackerPosRangeMax)
                                                   // 16: stays at the nodes first position and does not move
-                                                
-    string attackerTypeProbability = default(""); // probability for each attacker type
-                                                  // example: to set the probability for the first selected attacker type to 0.3 and for the second selected attacker type to 0.7,
-                                                  // you need to set attackerTypeProbability to "0.3 0.7" (or just "0.3")
+                                                  // 32: sets a constant speed
+                                                  // 64: sets dynamic random position (similar to 8)
                                                   
     double attackerXPos = default(0);             // x coordinate of the attacker (in BSMs) (attacker type 1)
     double attackerYPos = default(0);             // y coordinate of the attacker (in BSMs) (attacker type 1)
@@ -54,4 +46,9 @@ simple AttackerApp extends TracingApp
     double attackerYOffset = default(150);        // y offset for attacker type 2
     double attackerPosRangeMin = default(-300);   // min value for attacker type 8
     double attackerPosRangeMax = default(300);    // max value for attacker type 8
+    double attackerXSpeed = default(0);             // x speed component of the attacker (in BSMs) (attacker type 32)
+    double attackerYSpeed = default(0);             // y speed of the attacker (in BSMs) (attacker type 32)
+    double attackerSpeedRangeMin = default(-300);   // min value for attacker type 8
+    double attackerSpeedRangeMax = default(300);    // max value for attacker type 8
+    double stayAtPositionIncrement = default(0.025);// increment that decides the probability that attacker 16 will stop (incremented at every local position update)
 }

@@ -22,6 +22,8 @@
 #define ATTACKER_TYPE_RANDOM_POSITION 4
 #define ATTACKER_TYPE_RANDOM_DYNAMIC_POSITION 8
 #define ATTACKER_TYPE_STAY_AT_POSITION 16
+#define ATTACKER_TYPE_CONST_SPEED 32
+#define ATTACKER_TYPE_RANDOM_DYNAMIC_SPEED 64
 
 using namespace omnetpp;
 
@@ -35,6 +37,8 @@ class AttackerApp : public TracingApp
         bool attacker;
         double attackerPosRangeMin;
         double attackerPosRangeMax;
+        double attackerSpeedRangeMin;
+        double attackerSpeedRangeMax;
         Coord position;
         bool positionInitialized;
         int attackerType;
@@ -55,9 +59,14 @@ class AttackerApp : public TracingApp
         virtual void attackSetDynamicPosition(BasicSafetyMessage* bsm, double xPos, double yPos);
         virtual void attackSetRandomPosition(BasicSafetyMessage* bsm);
         virtual void attackSetRandomDynamicPosition(BasicSafetyMessage* bsm);
-        virtual void attackerSetCurrentPosition(BasicSafetyMessage* bsm);
+        virtual void attackSetCurrentPosition(BasicSafetyMessage* bsm);
+        virtual void attackSetConstSpeed(BasicSafetyMessage* bsm);
+        virtual void attackSetConstSpeed(BasicSafetyMessage* bsm, double xSpeed, double ySpeed);
+        virtual void attackSetRandomDynamicSpeed(BasicSafetyMessage* bsm);
+        virtual void attackSetDynamicSpeed(BasicSafetyMessage* bsm, double xSpeed, double ySpeed);
         virtual Coord getRandomPosition();
         virtual Coord getRandomPositionInRange();
+        virtual Coord getRandomSpeedInRange();
 };
 
 long AttackerApp::currentAttackerCount = 0;
