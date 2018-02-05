@@ -84,6 +84,7 @@ void TracingApp::onBSM(BasicSafetyMessage* bsm) {
     //Your application has received a beacon message from another car or RSU
     //code for handling the message goes here
     Coord pos = bsm->getSenderPos();
+    Coord spd = bsm->getSenderSpeed();
 
     StringBuffer s;
     Writer<StringBuffer> writer(s);
@@ -109,6 +110,20 @@ void TracingApp::onBSM(BasicSafetyMessage* bsm) {
     writer.EndArray();
 
     writer.Key("pos_noise");
+    writer.StartArray();
+    writer.Double(0.0);
+    writer.Double(0.0);
+    writer.Double(0.0);
+    writer.EndArray();
+
+    writer.Key("spd");
+    writer.StartArray();
+    writer.Double(spd.x);
+    writer.Double(spd.y);
+    writer.Double(spd.z);
+    writer.EndArray();
+
+    writer.Key("spd_noise");
     writer.StartArray();
     writer.Double(0.0);
     writer.Double(0.0);
